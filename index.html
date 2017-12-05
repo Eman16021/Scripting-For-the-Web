@@ -1,0 +1,390 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <link rel="stylesheet" href="https://www.w3schools.com/lib/w3.css">
+  <link href= "https://github.com/goldfire/howler.js.git">
+  <link href="https://fonts.googleapis.com/css?family=Permanent+Marker|Righteous|Roboto" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Pong Game In JavaScript</title>
+
+<style>
+
+.iconfade{
+
+    -webkit-animation-name: example; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 8s; /* Safari 4.0 - 8.0 */
+    animation-name: example;
+    animation-duration: 8s;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes example {
+    0%   {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+/* Standard syntax */
+@keyframes example {
+    0%   {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+#box  /* Game Box */
+{
+   width: 650px;
+   height: 475px;
+   margin: auto;
+   border: 5px solid white;
+   position: relative;
+   overflow: hidden;
+}
+.padsize   /*  Paddle atributes */
+{
+  width: 10px;
+  height: 80px;
+
+}
+.ob
+{
+   position: absolute;
+   border: 0px;
+}
+
+.font{
+font-family: 'Righteous', cursive;
+color: white;
+
+
+
+}
+
+body{
+
+background-color: black
+;
+
+
+
+}
+.displayed {
+    display: block;
+    margin-left: auto;
+    margin-right: auto }
+</style>
+
+
+
+
+
+<script type="application/javascript">
+var Speed = 5; // Speed of ball (pixels/step)
+var CPUSpeed = 5.58; // Speed of CPU Paddle (pixels/step)
+
+
+// Short references to objects
+var paddle1;
+var paddle2;
+var ball;
+var box;
+var msg;
+// For internal use
+var dx, dy // speed in x and y directions
+var ballX, ballY // x and y postions of the ball
+var playerY // y postion of player paddle (x is fixed)
+var cpuY // y postion of cpu paddle (x is fixed)
+var iID; // To store ID of set interval used to clear it when required
+
+// Attach a function to onLoad event
+window.onload = Init;
+// Initialize Game Objects
+function Init()
+{
+  // Make short refrences to objects
+
+     paddle1 = document.getElementById('paddle1');
+     paddle2 = document.getElementById('paddle2');
+     ball = document.getElementById('soccerball');
+     box = document.getElementById('box');
+     msg = document.getElementById('msg');
+     // Initial values
+       ballX = (box.offsetWidth / 2) - (ball.offsetWidth / 2);
+       ballY = (box.offsetHeight / 2) - (ball.offsetHeight / 2);
+       cpuY = (box.offsetHeight / 2) - (paddle2.offsetHeight / 2);
+       playerY = (box.offsetHeight / 2) - (paddle1.offsetHeight / 2);
+       dx = dy = Speed
+
+
+   paddle1.style.left = 20 + 'px';
+   paddle1.style.top = playerY + 'px';
+   paddle2.style.left = box.offsetWidth - (20 + paddle2.offsetWidth) + 'px';
+   paddle2.style.top = cpuY + 'px';
+   ball.style.left = ballX + 'px';
+   ball.style.top = ballY + 'px';
+
+   // Show message
+
+   msg.innerHTML = '<h2 class="font">Click on Paddle to Start Game.</h2>';
+
+
+}
+
+
+// START GAME
+function Start()
+{
+   // Attach a function to onmousemove event of the box
+   box.onmousemove = MovePaddle;
+   // Call 'GameLoop()' function every 10 milliseconds
+
+   iID = setInterval('GameLoop()', 10);
+
+   msg.innerHTML = '';
+}
+// MAIN GAME LOOP, CALLED REPEATEDLY
+function GameLoop()
+{
+
+   // MOVE BALL
+   ballX += dx;
+   ballY += dy;
+
+   // See if ball is past player paddle
+
+   if(ballX < 0)
+   {
+      clearInterval(iID);
+      Init();
+      score();
+      sad();
+
+
+
+      box.onmousemove = '';
+
+      msg.innerHTML = '<h2 class="font">You Loose!<br/>Click on Paddle to Re-Start Game.</h2>';
+   }
+
+   // See if ball is past CPU paddle
+
+   if((ballX + ball.offsetWidth) > box.offsetWidth)
+   {
+      clearInterval(iID);
+      Init();
+      pScore();
+      ahh();
+      box.onmousemove = '';
+
+      msg.innerHTML = '<h2>You Win!<br/>Click on Paddle to Re-Start Game.</h2>';
+   }
+
+
+
+   // COLLISION DETECTION
+
+   // If ball hits upper or lower wall
+   if(ballY < 0 || ((ballY + ball.offsetHeight) > box.offsetHeight))
+      dy = -dy; // Make x direction opposite
+
+   // If ball hits player paddle
+{
+   if(ballX < (paddle1.offsetLeft + paddle1.offsetWidth))
+      if(((ballY + ball.offsetHeight) > playerY) && ballY < (playerY + paddle1.offsetHeight))
+         dx = -dx;
+    // if ball hits player paddle bouce sound effect
+            if(ballX < (paddle1.offsetLeft + paddle1.offsetWidth))
+               if(((ballY + ball.offsetHeight) > playerY) && ballY < (playerY + paddle1.offsetHeight))
+                   bounce();
+                 }
+                 if(ballX < (paddle1.offsetLeft + paddle1.offsetWidth))
+                    if(((ballY + ball.offsetHeight) > playerY) && ballY < (playerY + paddle1.offsetHeight))
+                     speedBall()
+   // If ball hits CPU paddle
+   if((ballX + ball.offsetWidth) > paddle2.offsetLeft)
+      if(((ballY + ball.offsetHeight) > cpuY) && ballY < (cpuY + paddle2.offsetHeight))
+         dx = -dx;
+
+         // if ball hits CPU sound effect
+         if((ballX + ball.offsetWidth) > paddle2.offsetLeft)
+            if(((ballY + ball.offsetHeight) > cpuY) && ballY < (cpuY + paddle2.offsetHeight))
+               bounce();
+   // Place ball at calculated positions
+
+   ball.style.left = ballX + 'px';
+   ball.style.top = ballY + 'px';
+
+   // MOVE CPU PADDLE
+   // Move paddle only if ball is coming towards the CPU paddle
+   if(dx > 0)
+   {
+      if((cpuY + (paddle2.offsetHeight / 2)) > (ballY + ball.offsetHeight)) cpuY -= CPUSpeed;
+      else cpuY += CPUSpeed;
+
+      paddle2.style.top = cpuY + 'px';
+   }
+}
+// TO MOVE PLAYER PADDLE ON MOUSE MOVE EVENT
+function MovePaddle(e)
+{
+   // Fetch y coordinate of mouse
+   var y = (e.clientY - (box.offsetTop - document.documentElement.scrollTop));
+   // Here, (box.offsetTop - document.documentElement.scrollTop) will get the relative
+   // position of "box" w.r.t to current scroll postion
+
+   // If y below lower boundary (cannot go above upper boundary -
+   // mousemove event only generated when mouse is inside box
+   if(y > (box.offsetHeight - paddle1.offsetHeight))
+      y = (box.offsetHeight - paddle1.offsetHeight);
+
+   // Copy position
+   playerY = y;
+   // Set position
+
+   paddle1.style.top = y + 'px';
+}
+
+
+
+
+
+
+
+function speedBall() {     // When ball hits paddle ball will speed up
+   dx = dy = Speed + addb()
+
+}
+
+</script>
+
+<script src="howler.js"></script>
+<script>
+
+
+
+
+
+
+function ahh() {
+var sound = new Howl({
+  src: ['ahh.wav'],
+  autoplay: true,
+  loop: false,
+  volume: 0.5,
+  onend: function() {
+    console.log('Finished!');
+  }
+});
+}
+
+
+
+function sad() {
+var sound = new Howl({
+  src: ['sad.wav'],
+  autoplay: true,
+  loop: false,
+  volume: 0.5,
+  onend: function() {
+    console.log('Finished!');
+  }
+});
+}
+
+
+
+
+function bounce() { // Ball Bounce Function
+
+var sound = new Howl({   // Ball bounce sound effect
+  src: ['sound.mp3'],
+  autoplay: true,
+  loop: false,
+  volume: 0.3,
+  onend: function() {
+    console.log('Finished!');
+  }
+});
+}
+
+
+var sound = new Howl({    // Theme Song
+  src: ['tetris.mp3'],
+  autoplay: true,
+  loop: true,
+  volume: 0.05,
+  onend: function() {
+    console.log('Finished!');
+  }
+});
+
+                         //Counter Function
+ var sub = (function () {
+     var counter = 0;
+    return function () {return counter - 1;
+            }
+  })();
+ var addb = (function () {
+     var counter = 0;
+     return function () {return counter += .09;
+
+      }
+ })();
+
+var add = (function () {
+    var counter = 0;
+    return function () {return counter += 1;
+    }
+})();
+var add2 = (function () {
+    var counter = 0;
+    return function () {return counter += 1;
+    }
+})();
+
+function score(){
+    document.getElementById("add").innerHTML = add();
+
+
+
+}
+function pScore(){
+    document.getElementById("pscore").innerHTML = add2();
+}
+
+
+
+</script>
+</head>
+
+<body bgcolor="#fff">
+<img src="assets/pong.png" id="myImage" class="w3-animate-top displayed" >
+<div>
+<p class="font iconfade"  align="center"> Player 1</p>
+<p class="font iconfade"  id="pscore"align="center"> 0 </p>
+</div>
+<p class="font iconfade" align="center">CPU </p>
+<p class= "font iconfade"  id="add" align="center"> 0 </p>
+
+<div id="box">
+<img class="padsize ob" id="paddle1" src="assets/paddle.png" onclick="javascript: Start()"/>
+
+<img class="padsize ob" id="paddle2" src="assets/paddle.png" />
+<img class="ob" id="soccerball" src="assets/ballsmall.png" />
+
+</div>
+<div id="msg" align="center"></div>
+
+
+<div class="w3-center w3-container">
+
+  
+
+
+
+</div>
+</body>
+
+
+</html>

@@ -1,6 +1,9 @@
 # Scripting-For-the-Web  
 
-This ReadME will provide a general overview of what I've completed over the semester. This semester I created a Pong Game and Learned about Fragment Shaders straight from the web. 
+This ReadME will provide a general overview of what I've completed over the semester. This semester I created a Pong Game and Learned about Fragment Shaders straight from the web.
+
+
+
 PONG: 
   First off all. I created a retro Pong Game. I did this with mostly JavaScript and some Css. I applied much of what I learned in class and in our text book. I used variables to control all of the objects. The paddles, the ball, its speed, and the game window. I also used basic methods to call elements in the HTML so I could manipulate them. 
 Moreover, I have multiple functions running throughout. For example I have a counter function controlling the point system between the Player and the AI. 
